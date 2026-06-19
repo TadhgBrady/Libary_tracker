@@ -1,0 +1,35 @@
+services:
+  book_svc:
+    build:
+      context: ./book_svc
+      dockerfile: dockerfile
+    container_name: book_svc
+    ports:
+      - "8001:8001"
+    depends_on:
+      book-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://postgres:example@book-db:5432/books
+
+  book-db:
+    image: postgres:15-alpine
+    container_name: book-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: books
+    ports:
+      - "5432:5432"
+    volumes:
+      - book-db-data:/var/lib/postgresql/data
+      - ./book_db/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro,Z
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d books"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  book-db-data:
