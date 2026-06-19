@@ -3,7 +3,9 @@ from fastapi.responses import JSONResponse
 from app.core.errors import NotFoundError,ValidationError,DatabaseError
 from app.interfaces.api.routes.books import router
 from app.middleware.logging import log_requests
-app = FastAPI()
+from app.core.config import settings
+
+app = FastAPI(title=settings.app_name)
 
 app.middleware("http")(log_requests)
 @app.exception_handler(NotFoundError)

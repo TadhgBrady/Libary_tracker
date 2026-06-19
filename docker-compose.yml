@@ -9,8 +9,7 @@ services:
     depends_on:
       book-db:
         condition: service_healthy
-    environment:
-      DATABASE_URL: postgres://postgres:example@book-db:5432/books
+   
 
   book-db:
     image: postgres:15-alpine
