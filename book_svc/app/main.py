@@ -10,30 +10,8 @@ from app.core.config import get_settings
 
 app = FastAPI()
 
-"""
-# -----------------------------
-# Startup lifecycle (safe init)
-# -----------------------------
-@app.on_event("startup")
-def startup():
-    settings = get_settings()
-
-    # set runtime config safely
-    app.title = settings.app_name
-
-    # initialize database (no import-time side effects)
-    init_db()
-"""
-
-# -----------------------------
-# Middleware
-# -----------------------------
 app.middleware("http")(log_requests)
 
-
-# -----------------------------
-# Exception handlers
-# -----------------------------
 @app.exception_handler(NotFoundError)
 def not_found_handler(request: Request, exc: NotFoundError):
     return JSONResponse(
@@ -65,8 +43,4 @@ def global_exception_handler(request: Request, exc: Exception):
         content={"error": "Internal server error"},
     )
 
-
-# -----------------------------
-# Routes
-# -----------------------------
 app.include_router(router, prefix="/books")

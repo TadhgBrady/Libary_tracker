@@ -27,3 +27,29 @@ class SQLBookRepository(BookRepository):
         except SQLAlchemyError as e:
             self.db.rollback()
             raise DatabaseError(str(e))
+
+    def update(self, book: DomainBook):
+        try:
+            self.db.commit()
+            self.db.refresh(book)
+            return book
+
+        except SQLAlchemyError as e:
+            self.db.rollback()
+            raise DatabaseError(str(e))
+        
+    def delete(self, book_id: int):
+        try:
+            db_book = (
+                self.db.query(DBBook)
+                .filter(DBBook.id == book_id)
+                .first()
+            )
+
+            if db_book:
+                self.db.delete(db_book)
+                self.db.commit()
+
+        except SQLAlchemyError as e:
+            self.db.rollback()
+            raise DatabaseError(str(e))

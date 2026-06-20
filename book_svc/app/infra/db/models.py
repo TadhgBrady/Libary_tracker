@@ -23,3 +23,5 @@ class Comment(Base):
     book_id = Column(Integer, ForeignKey("books.id"), index=True)
     created_at = Column(DateTime, server_default=func.now())
     book = relationship("Book", back_populates="comments")
+
+    

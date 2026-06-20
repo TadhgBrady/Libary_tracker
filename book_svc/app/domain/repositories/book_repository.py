@@ -16,3 +16,11 @@ class BookRepository(ABC):
     @abstractmethod
     def create(self, book: Book) -> Book:
         pass
+
+    @abstractmethod
+    def update(self, book: Book) -> Book:
+        pass
+
+    @abstractmethod
+    def delete(self, book_id: int) -> None:
+        pass
